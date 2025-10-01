@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calcolatore gratuito per pianificare il tuo risparmio mensile. Scopri quanto puoi risparmiare e raggiungi i tuoi obiettivi finanziari.">
+    <title>Calcolatore Risparmio Mensile - Pianifica le Tue Finanze</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-calculate:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-item h3 {
+            color: #667eea;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .result-value.highlight {
+            color: #10b981;
+        }
+
+        .tips {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .tips h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .tip-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .tip-item h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .calculator-card {
+                padding: 25px;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Calcolatore Risparmio Mensile</h1>
+            <p class="subtitle">Pianifica il tuo futuro finanziario in modo intelligente</p>
+        </header>
+
+        <div class="calculator-card">
+            <form id="savingsForm">
+                <div class="input-group">
+                    <label for="income">💵 Stipendio Mensile Netto (€)</label>
+                    <input type="number" id="income" placeholder="Es. 1800" min="0" step="0.01" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="rent">🏠 Affitto/Mutuo (€)</label>
+                    <input type="number" id="rent" placeholder="Es. 600" min="0" step="0.01" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="bills">⚡ Bollette e Utenze (€)</label>
+                    <input type="number" id="bills" placeholder="Es. 150" min="0" step="0.01" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="food">🍕 Spesa Alimentare (€)</label>
+                    <input type="number" id="food" placeholder="Es. 300" min="0" step="0.01" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="transport">🚗 Trasporti (€)</label>
+                    <input type="number" id="transport" placeholder="Es. 100" min="0" step="0.01" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="other">🛍️ Altre Spese (€)</label>
+                    <input type="number" id="other" placeholder="Es. 200" min="0" step="0.01" required>
+                </div>
+
+                <button type="submit" class="btn-calculate">📊 Calcola il Mio Risparmio</button>
+            </form>
+
+            <div id="results" class="results">
+                <div class="result-item">
+                    <h3>💸 Totale Spese Mensili</h3>
+                    <div class="result-value" id="totalExpenses">€0</div>
+                </div>
+
+                <div class="result-item">
+                    <h3>✨ Risparmio Mensile Possibile</h3>
+                    <div class="result-value highlight" id="monthlySavings">€0</div>
+                </div>
+
+                <div class="result-item">
+                    <h3>📈 Risparmio Annuale</h3>
+                    <div class="result-value" id="yearlySavings">€0</div>
+                </div>
+
+                <div class="result-item">
+                    <h3>💹 Risparmio in 5 Anni</h3>
+                    <div class="result-value" id="fiveYearSavings">€0</div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>📊 Percentuale di Risparmio</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="savingsPercentage">0%</div>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <h3>💡 Consiglio Personalizzato</h3>
+                    <p id="advice" style="color: #666; font-size: 1rem; line-height: 1.6;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips">
+            <h2>📚 5 Strategie per Risparmiare di Più</h2>
+            
+            <div class="tip-item">
+                <h3>1. Regola del 50/30/20</h3>
+                <p>Destina il 50% delle entrate alle necessità, il 30% ai desideri e il 20% al risparmio. Questo metodo semplice ti aiuta a mantenere un equilibrio finanziario sano.</p>
+            </div>
+
+            <div class="tip-item">
+                <h3>2. Automatizza il Risparmio</h3>
+                <p>Imposta un bonifico automatico il giorno dopo lo stipendio verso un conto risparmio. Risparmiare prima di spendere è la chiave del successo.</p>
+            </div>
+
+            <div class="tip-item">
+                <h3>3. Riduci gli Sprechi Energetici</h3>
+                <p>Abbassa il riscaldamento di 1°C e risparmia fino al 6% sulla bolletta. Piccoli gesti quotidiani possono farti risparmiare centinaia di euro all'anno.</p>
+            </div>
+
+            <div class="tip-item">
+                <h3>4. Confronta le Offerte</h3>
+                <p>Usa comparatori online per assicurazioni, telefonia e utenze. Cambiare fornitore può farti risparmiare fino a €500/anno.</p>
+            </div>
+
+            <div class="tip-item">
+                <h3>5. Sfida dei 30 Giorni</h3>
+                <p>Prima di un acquisto importante, aspetta 30 giorni. Spesso scoprirai che non ne hai davvero bisogno, risparmiando denaro e spazio.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 <strong>Consiglio:</strong> Rivedi questo calcolo ogni 3 mesi per ottimizzare il tuo risparmio</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">© 2025 Calcolatore Risparmio - Strumento gratuito per la pianificazione finanziaria</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('savingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const income = parseFloat(document.getElementById('income').value);
+            const rent = parseFloat(document.getElementById('rent').value);
+            const bills = parseFloat(document.getElementById('bills').value);
+            const food = parseFloat(document.getElementById('food').value);
+            const transport = parseFloat(document.getElementById('transport').value);
+            const other = parseFloat(document.getElementById('other').value);
+
+            const totalExpenses = rent + bills + food + transport + other;
+            const monthlySavings = income - totalExpenses;
+            const yearlySavings = monthlySavings * 12;
+            const fiveYearSavings = monthlySavings * 60;
+            const savingsPercentage = ((monthlySavings / income) * 100).toFixed(1);
+
+            document.getElementById('totalExpenses').textContent = '€' + totalExpenses.toFixed(2);
+            document.getElementById('monthlySavings').textContent = '€' + monthlySavings.toFixed(2);
+            document.getElementById('yearlySavings').textContent = '€' + yearlySavings.toFixed(2);
+            document.getElementById('fiveYearSavings').textContent = '€' + fiveYearSavings.toFixed(2);
+
+            const progressBar = document.getElementById('savingsPercentage');
+            const percentage = Math.max(0, Math.min(100, parseFloat(savingsPercentage)));
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = savingsPercentage + '%';
+
+            let advice = '';
+            if (savingsPercentage < 0) {
+                advice = '⚠️ Attenzione! Le tue spese superano le entrate. È urgente rivedere il budget e tagliare le spese non essenziali. Considera di aumentare le tue entrate con un lavoro extra.';
+            } else if (savingsPercentage < 10) {
+                advice = '🔴 Il tuo risparmio è molto basso. Cerca di ridurre almeno una voce di spesa del 10-15%. Anche piccoli tagli possono fare una grande differenza nel lungo periodo.';
+            } else if (savingsPercentage < 20) {
+                advice = '🟡 Buon inizio! Sei sulla strada giusta, ma puoi migliorare. Prova ad automatizzare il risparmio e cerca offerte migliori per le utenze.';
+            } else if (savingsPercentage < 30) {
+                advice = '🟢 Ottimo lavoro! Stai risparmiando una percentuale salutare. Continua così e considera di investire parte dei risparmi per farli crescere.';
+            } else {
+                advice = '🏆 Eccezionale! Sei un campione del risparmio! Con questa disciplina, raggiungerai i tuoi obiettivi finanziari rapidamente. Considera investimenti a lungo termine.';
+            }
+
+            document.getElementById('advice').textContent = advice;
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>
